@@ -6,13 +6,14 @@ import java.util.List;
 import br.com.caelum.leilao.dominio.Leilao;
 import br.com.caelum.leilao.infra.dao.LeilaoDao;
 import br.com.caelum.leilao.infra.dao.LeilaoDaoFalso;
+import br.com.caelum.leilao.infra.dao.RepositorioDeLeilao;
 
 public class EncerradorDeLeilao {
 
 	private int total = 0;
-	private LeilaoDao dao;
+	private RepositorioDeLeilao dao;
 
-	public EncerradorDeLeilao(LeilaoDao dao) {
+	public EncerradorDeLeilao(RepositorioDeLeilao dao) {
 		this.dao = dao;
 	}
 

@@ -1,6 +1,8 @@
 package br.com.caelum.leilao.servico;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -14,6 +16,7 @@ import org.junit.Test;
 import br.com.caelum.leilao.builder.CriadorDeLeilao;
 import br.com.caelum.leilao.dominio.Leilao;
 import br.com.caelum.leilao.infra.dao.LeilaoDao;
+import br.com.caelum.leilao.infra.dao.RepositorioDeLeilao;
 
 public class EncerradorDeLeilaoTest {
 
@@ -28,7 +31,7 @@ public class EncerradorDeLeilaoTest {
 				.constroi();
 		
 		List<Leilao> leiloes = Arrays.asList(leilao1, leilao2);
-		LeilaoDao daoFalso = mock(LeilaoDao.class);
+		RepositorioDeLeilao daoFalso = mock(RepositorioDeLeilao.class);
 		
 		when(daoFalso.correntes()).thenReturn(leiloes);
 		
@@ -51,7 +54,7 @@ public class EncerradorDeLeilaoTest {
 				.constroi();
 		List<Leilao> leiloes = Arrays.asList(leilao1,leilao2);
 		
-		LeilaoDao dao= mock(LeilaoDao.class);
+		RepositorioDeLeilao dao= mock(RepositorioDeLeilao.class);
 		when(dao.correntes()).thenReturn(leiloes);
 		
 		EncerradorDeLeilao encerradorDeLeilao = new EncerradorDeLeilao(dao);
@@ -64,7 +67,7 @@ public class EncerradorDeLeilaoTest {
 
 @Test
 public void naoDeveFazerNadaSemLeiloes(){
-	LeilaoDao dao = mock(LeilaoDao.class);
+	RepositorioDeLeilao dao = mock(RepositorioDeLeilao.class);
 	when(dao.correntes()).thenReturn(new ArrayList<Leilao>());
 	
 	EncerradorDeLeilao encerradorDeLeilao= new EncerradorDeLeilao(dao);
