@@ -15,7 +15,7 @@ import br.com.caelum.leilao.dominio.Lance;
 import br.com.caelum.leilao.dominio.Leilao;
 import br.com.caelum.leilao.dominio.Usuario;
 
-public class LeilaoDao implements RepositorioDeLeilao {
+public class LeilaoDao implements RepositorioDeLeiloes {
 
 	private Connection conexao;
 
