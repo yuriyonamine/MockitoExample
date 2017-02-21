@@ -127,4 +127,56 @@ public class EncerradorDeLeilaoTest {
 		inOrder.verify(dao, times(1)).atualiza(leilao1);
 		inOrder.verify(enviadorDeEmail, times(1)).envia(leilao1);
 	}
+	
+	@Test
+	public void deveContinuarExecutandoQuandoLancarExcecao(){
+		Calendar data = Calendar.getInstance();
+		data.add(Calendar.DAY_OF_MONTH, -10);
+
+		Leilao leilao1 = new CriadorDeLeilao().para("Video Game").naData(data)
+				.constroi();
+		Leilao leilao2 = new CriadorDeLeilao().para("Computador").naData(data)
+				.constroi();
+		
+		List<Leilao> leiloes = Arrays.asList(leilao1, leilao2);
+
+		RepositorioDeLeiloes dao = mock(RepositorioDeLeiloes.class);
+		when(dao.correntes()).thenReturn(leiloes);
+
+		EnviadorDeEmail enviadorDeEmail = mock(EnviadorDeEmail.class);
+		doThrow(new RuntimeException()).when(dao).atualiza(leilao1);
+		
+		EncerradorDeLeilao encerradorDeLeilao = new EncerradorDeLeilao(dao,
+				enviadorDeEmail);
+		encerradorDeLeilao.encerra();
+		
+		verify(dao).atualiza(leilao2);
+		verify(enviadorDeEmail).envia(leilao2);
+	}
+	
+	@Test
+	public void naoDeveInvocarEnviadorDeEmail(){
+		Calendar data = Calendar.getInstance();
+		data.add(Calendar.DAY_OF_MONTH, -10);
+
+		Leilao leilao1 = new CriadorDeLeilao().para("Video Game").naData(data)
+				.constroi();
+		Leilao leilao2 = new CriadorDeLeilao().para("Computador").naData(data)
+				.constroi();
+		
+		List<Leilao> leiloes = Arrays.asList(leilao1, leilao2);
+
+		RepositorioDeLeiloes dao = mock(RepositorioDeLeiloes.class);
+		when(dao.correntes()).thenReturn(leiloes);
+
+		EnviadorDeEmail enviadorDeEmail = mock(EnviadorDeEmail.class);
+		doThrow(new RuntimeException()).when(dao).atualiza(any(Leilao.class));
+		
+		EncerradorDeLeilao encerradorDeLeilao = new EncerradorDeLeilao(dao,
+				enviadorDeEmail);
+		encerradorDeLeilao.encerra();
+		
+		verify(enviadorDeEmail, never()).envia(leilao1);
+		verify(enviadorDeEmail, never()).envia(leilao2);
+	}
 }

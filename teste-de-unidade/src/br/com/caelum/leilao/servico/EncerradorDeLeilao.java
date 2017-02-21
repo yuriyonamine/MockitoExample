@@ -21,12 +21,16 @@ public class EncerradorDeLeilao {
 		List<Leilao> todosLeiloesCorrentes = dao.correntes();
 
 		for (Leilao leilao : todosLeiloesCorrentes) {
+			try{
 			if (comecouSemanaPassada(leilao)) {
 				System.out.println("oi");
 				leilao.encerra();
 				total++;
 				dao.atualiza(leilao);
 				carteiro.envia(leilao);
+			}
+			}catch(RuntimeException e){
+				System.out.println(e.getMessage());
 			}
 		}
 	}
