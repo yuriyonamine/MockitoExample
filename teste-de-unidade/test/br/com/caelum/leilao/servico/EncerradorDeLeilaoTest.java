@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -38,4 +39,37 @@ public class EncerradorDeLeilaoTest {
 		assertTrue(leilao1.isEncerrado());
 		assertTrue(leilao2.isEncerrado());
 	}
+	
+	@Test
+	public void naoDeveFinalizarLeiloesQueComecaramNoDiaAnterior(){
+		Calendar data = Calendar.getInstance();
+		data.add(Calendar.DAY_OF_MONTH, -1);
+		
+		Leilao leilao1 = new CriadorDeLeilao().para("Video Game").naData(data)
+				.constroi();
+		Leilao leilao2 = new CriadorDeLeilao().para("Computador").naData(data)
+				.constroi();
+		List<Leilao> leiloes = Arrays.asList(leilao1,leilao2);
+		
+		LeilaoDao dao= mock(LeilaoDao.class);
+		when(dao.correntes()).thenReturn(leiloes);
+		
+		EncerradorDeLeilao encerradorDeLeilao = new EncerradorDeLeilao(dao);
+		encerradorDeLeilao.encerra();
+		
+		assertEquals(0, encerradorDeLeilao.getTotalEncerrados());
+		assertFalse(leilao1.isEncerrado());
+		assertFalse(leilao2.isEncerrado());
+	}
+
+@Test
+public void naoDeveFazerNadaSemLeiloes(){
+	LeilaoDao dao = mock(LeilaoDao.class);
+	when(dao.correntes()).thenReturn(new ArrayList<Leilao>());
+	
+	EncerradorDeLeilao encerradorDeLeilao= new EncerradorDeLeilao(dao);
+	encerradorDeLeilao.encerra();
+	
+	assertEquals(0, encerradorDeLeilao.getTotalEncerrados());
+}
 }
