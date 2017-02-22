@@ -1,5 +1,7 @@
 package br.com.caelum.leilao.dominio;
 
-public interface Relogio {
+import java.util.Calendar;
 
+public interface Relogio {
+	Calendar hoje();
 }
